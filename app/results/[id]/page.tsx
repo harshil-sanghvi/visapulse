@@ -26,7 +26,7 @@ async function getResult(id: string): Promise<AnalyzeResult | null> {
     mode: data.result_mode as ResultMode,
     sources: {
       community_n: 0,
-      ai_provider: null,
+      ai_provider: scores.ai_provider ?? null,
     },
     input_summary: {
       status: data.status,
@@ -68,7 +68,7 @@ export default async function ResultsPage({ params }: { params: Promise<{ id: st
 
       {(scores.sub_scores ?? []).length > 0 && (
         <div className="grid grid-cols-2 gap-3">
-          {scores.sub_scores.map((s, i) => <SubScoreCard key={i} score={s} />)}
+          {scores.sub_scores.map((s) => <SubScoreCard key={s.label} score={s} />)}
         </div>
       )}
 

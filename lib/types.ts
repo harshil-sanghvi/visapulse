@@ -25,6 +25,7 @@ export interface Scores {
   ai_insight?: string
   pulse_score_reasoning?: string
   sub_scores: SubScore[]
+  ai_provider?: 'gemini' | 'groq' | null
 }
 
 export interface AnalyzeResult {

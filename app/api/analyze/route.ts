@@ -93,6 +93,7 @@ export async function POST(req: NextRequest) {
     ai_insight: aiScores?.ai_insight,
     pulse_score_reasoning: aiScores?.pulse_score_reasoning,
     sub_scores: baseSubScores,
+    ai_provider: provider,
   }
 
   // 7. Store anonymized submission (no PII — receipt_number excluded)
