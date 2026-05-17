@@ -1,31 +1,11 @@
+export type { AnalyzeInput } from './schema'
+
 export type VisaStatus = 'opt' | 'stem_opt' | 'h1b_pending' | 'h1b_approved'
 export type ServiceCenter = 'TSC' | 'NSC' | 'VSC' | 'CSC'
 export type DegreeLevel = 'BS' | 'MS' | 'PhD'
 export type TravelRisk = 'safe' | 'caution' | 'avoid'
 export type RFERisk = 'low' | 'medium' | 'high'
 export type ResultMode = 'FULL' | 'DATA-ONLY' | 'PARTIAL'
-
-export interface AnalyzeInput {
-  status: VisaStatus
-  country_of_birth: string
-  employer: string
-  job_title: string
-  // OPT fields
-  opt_expiry?: string       // ISO date string YYYY-MM-DD
-  degree_level?: DegreeLevel
-  h1b_filed?: boolean
-  // STEM OPT fields — same as OPT
-  // H1B Pending fields
-  service_center?: ServiceCenter
-  filing_date?: string      // ISO date string YYYY-MM-DD
-  premium_processing?: boolean
-  receipt_number?: string   // optional, not stored
-  // H1B Approved fields
-  approval_date?: string
-  visa_stamp_expiry?: string
-  traveled_recently?: boolean
-  stamp_country?: string
-}
 
 export interface SubScore {
   value: string | number

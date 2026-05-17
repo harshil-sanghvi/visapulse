@@ -51,4 +51,39 @@ describe('analyzeInputSchema', () => {
     const result = analyzeInputSchema.safeParse({ ...validH1bPending, receipt_number: 'EAC2512345678' })
     expect(result.success).toBe(true)
   })
+
+  it('rejects STEM OPT input missing opt_expiry', () => {
+    const result = analyzeInputSchema.safeParse({
+      status: 'stem_opt',
+      country_of_birth: 'India',
+      employer: 'Acme Corp',
+      job_title: 'Software Engineer',
+      degree_level: 'MS',
+    })
+    expect(result.success).toBe(false)
+    expect(JSON.stringify(result)).toContain('opt_expiry')
+  })
+
+  it('rejects H1B approved input missing approval_date', () => {
+    const result = analyzeInputSchema.safeParse({
+      status: 'h1b_approved',
+      country_of_birth: 'India',
+      employer: 'Acme Corp',
+      job_title: 'Software Engineer',
+    })
+    expect(result.success).toBe(false)
+    expect(JSON.stringify(result)).toContain('approval_date')
+  })
+
+  it('rejects invalid date value', () => {
+    const result = analyzeInputSchema.safeParse({
+      status: 'h1b_pending',
+      country_of_birth: 'India',
+      employer: 'Acme Corp',
+      job_title: 'Software Engineer',
+      service_center: 'TSC',
+      filing_date: '2025-13-45',
+    })
+    expect(result.success).toBe(false)
+  })
 })

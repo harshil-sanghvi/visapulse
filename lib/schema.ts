@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const analyzeInputSchema = z.object({
   status: z.enum(['opt', 'stem_opt', 'h1b_pending', 'h1b_approved']),
-  country_of_birth: z.string().min(2).max(100),
+  country_of_birth: z.string().trim().min(2).max(100),
   employer: z.string().min(1).max(200),
   job_title: z.string().min(1).max(200),
   // OPT / STEM OPT
@@ -29,6 +29,17 @@ export const analyzeInputSchema = z.object({
   if (data.status === 'h1b_pending' && !data.filing_date) {
     ctx.addIssue({ code: 'custom', path: ['filing_date'], message: 'Filing date required for H1B Pending' })
   }
+  if (data.status === 'h1b_approved' && !data.approval_date) {
+    ctx.addIssue({ code: 'custom', path: ['approval_date'], message: 'Approval date required for H1B Approved' })
+  }
+  // Validate all date fields are real dates
+  const dateFields = ['opt_expiry', 'filing_date', 'approval_date', 'visa_stamp_expiry'] as const
+  for (const field of dateFields) {
+    const val = data[field]
+    if (val && isNaN(Date.parse(val))) {
+      ctx.addIssue({ code: 'custom', path: [field], message: `${field} must be a valid date` })
+    }
+  }
 })
 
-export type AnalyzeInputRaw = z.infer<typeof analyzeInputSchema>
+export type AnalyzeInput = z.infer<typeof analyzeInputSchema>
