@@ -16,7 +16,7 @@ export default function HomePage() {
           <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
             Know your visa risk.
           </h1>
-          <p className="mt-2 text-sm text-gray-500 dark:text-gray-500 max-w-sm mx-auto leading-relaxed">
+          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400 max-w-sm mx-auto leading-relaxed">
             Free, anonymous, based on official USCIS data and live policy updates — not guesswork.
           </p>
           <div className="mt-4 flex flex-wrap gap-2 justify-center">
