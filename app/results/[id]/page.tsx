@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import { supabaseAdmin } from '@/lib/supabase'
+import { getCommunityBenchmark } from '@/lib/community'
 import { PulseScore } from '@/components/results/PulseScore'
 import { SubScoreCard } from '@/components/results/SubScoreCard'
 import { CommunityBenchmark } from '@/components/results/CommunityBenchmark'
@@ -7,17 +8,25 @@ import { AIInsight } from '@/components/results/AIInsight'
 import { TransparencyPanel } from '@/components/results/TransparencyPanel'
 import { ShareButton } from '@/components/results/ShareButton'
 import { ResultModeBanner } from '@/components/results/ResultModeBanner'
-import type { Scores, AnalyzeResult, ResultMode } from '@/lib/types'
+import type { Scores, AnalyzeResult, ResultMode, AnalyzeInput } from '@/lib/types'
 import type { Metadata } from 'next'
 
 async function getResult(id: string): Promise<AnalyzeResult | null> {
   const { data, error } = await supabaseAdmin
     .from('submissions')
-    .select('id, status, country_of_birth, service_center, scores, result_mode, created_at')
+    .select('id, status, country_of_birth, service_center, degree_level, scores, result_mode, created_at')
     .eq('id', id)
     .single()
 
   if (error || !data) return null
+
+  const communityInput = {
+    status: data.status,
+    country_of_birth: data.country_of_birth,
+    service_center: data.service_center,
+    degree_level: data.degree_level,
+  } as AnalyzeInput
+  const community = await getCommunityBenchmark(communityInput).catch(() => ({ n: 0 }))
 
   const scores = data.scores as Scores
   return {
@@ -25,7 +34,8 @@ async function getResult(id: string): Promise<AnalyzeResult | null> {
     scores,
     mode: data.result_mode as ResultMode,
     sources: {
-      community_n: 0,
+      community_n: community.n,
+      median_approval_months: community.median_approval_months,
       ai_provider: scores.ai_provider ?? null,
     },
     input_summary: {
