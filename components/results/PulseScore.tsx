@@ -1,25 +1,53 @@
-function scoreColor(score: number) {
-  if (score >= 71) return { label: 'Low Risk', textColor: 'text-green-400' }
-  if (score >= 41) return { label: 'Moderate Risk', textColor: 'text-amber-400' }
-  return { label: 'High Risk', textColor: 'text-red-400' }
+function riskConfig(score: number): {
+  label: string
+  textColor: string
+  stripClass: string
+} {
+  if (score >= 71)
+    return {
+      label: 'Low Risk',
+      textColor: 'text-green-500 dark:text-green-400',
+      stripClass:
+        'bg-gradient-to-r from-green-50 dark:from-green-950 to-transparent border-b border-green-200 dark:border-green-900',
+    }
+  if (score >= 41)
+    return {
+      label: 'Moderate Risk',
+      textColor: 'text-amber-500 dark:text-amber-400',
+      stripClass:
+        'bg-gradient-to-r from-amber-50 dark:from-amber-950 to-transparent border-b border-amber-200 dark:border-amber-900',
+    }
+  return {
+    label: 'High Risk',
+    textColor: 'text-red-500 dark:text-red-400',
+    stripClass:
+      'bg-gradient-to-r from-red-50 dark:from-red-950 to-transparent border-b border-red-200 dark:border-red-900',
+  }
 }
 
 export function PulseScore({ score, reasoning }: { score: number; reasoning?: string }) {
-  const { textColor, label } = scoreColor(score)
-  const barWidth = `${score}%`
+  const { label, textColor, stripClass } = riskConfig(score)
 
   return (
-    <div className="rounded-lg border border-gray-800 bg-[#111113] p-5 text-center">
-      <div className="mb-1 text-xs uppercase tracking-widest text-gray-500">Visa Pulse Score</div>
-      <div className={`text-7xl font-bold leading-none ${textColor}`}>{score}</div>
-      <div className="mt-1 text-sm text-gray-400">{label}</div>
-      <div className="mt-3 h-1.5 rounded-full bg-gray-800">
-        <div className="h-1.5 rounded-full bg-gradient-to-r from-red-500 via-amber-400 to-green-400" style={{ width: barWidth }} />
+    <div className={`${stripClass} px-5 py-5 flex flex-wrap gap-6 items-start`}>
+      <div className="flex-shrink-0">
+        <div className="text-xs uppercase tracking-widest text-gray-500 dark:text-gray-500 mb-1">
+          Pulse Score
+        </div>
+        <div className={`text-6xl font-bold leading-none ${textColor}`}>{score}</div>
+        <div className={`text-sm font-semibold mt-1.5 ${textColor}`}>{label}</div>
       </div>
-      <div className="mt-1 flex justify-between text-xs text-gray-600">
-        <span>High Risk</span><span>Low Risk</span>
-      </div>
-      {reasoning && <p className="mt-3 text-xs text-gray-500 italic">{reasoning}</p>}
+
+      {reasoning && (
+        <div className="flex-1 min-w-[200px] pt-1">
+          <div className="text-xs uppercase tracking-widest text-gray-500 dark:text-gray-500 mb-2">
+            Why this score
+          </div>
+          <p className="text-sm italic leading-relaxed text-gray-600 dark:text-gray-300">
+            &ldquo;{reasoning}&rdquo;
+          </p>
+        </div>
+      )}
     </div>
   )
 }
