@@ -32,7 +32,11 @@ export async function getCommunityBenchmark(input: AnalyzeInput): Promise<Commun
     .filter((v): v is number => typeof v === 'number')
     .sort((a, b) => a - b)
 
-  const median = (arr: number[]) => arr.length ? arr[Math.floor(arr.length / 2)] : undefined
+  const median = (arr: number[]) => {
+    if (!arr.length) return undefined
+    const mid = Math.floor(arr.length / 2)
+    return arr.length % 2 === 0 ? (arr[mid - 1] + arr[mid]) / 2 : arr[mid]
+  }
 
   return {
     n: data.length,

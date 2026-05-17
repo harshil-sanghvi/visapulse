@@ -44,7 +44,6 @@ export function computeDeterministicPulseScore(factors: {
   travel_risk: TravelRisk
   rfe_risk?: RFERisk
   lottery_odds?: number
-  approval_months?: number
   uscis_min_months?: number
   uscis_max_months?: number
 }): number {
