@@ -26,7 +26,7 @@ async function getResult(id: string): Promise<AnalyzeResult | null> {
     service_center: data.service_center,
     degree_level: data.degree_level,
   } as AnalyzeInput
-  const community = await getCommunityBenchmark(communityInput).catch(() => ({ n: 0 }))
+  const community = await getCommunityBenchmark(communityInput).catch((): { n: number; median_approval_months?: number } => ({ n: 0 }))
 
   const scores = data.scores as Scores
   return {
