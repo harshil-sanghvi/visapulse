@@ -14,6 +14,12 @@ export interface SubScore {
   shown: boolean
 }
 
+export interface Citation {
+  title: string
+  url: string
+  fetched_at: string
+}
+
 export interface Scores {
   pulse_score: number
   lottery_odds?: number           // % — OPT/STEM OPT only
@@ -26,6 +32,7 @@ export interface Scores {
   pulse_score_reasoning?: string
   sub_scores: SubScore[]
   ai_provider?: 'gemini' | 'groq' | null
+  citations?: Citation[]
 }
 
 export interface AnalyzeResult {
