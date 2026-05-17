@@ -38,7 +38,7 @@ export function StatusSelector({
             onMouseLeave={() => setHovered(null)}
             className={`rounded-md border px-3 py-3 text-left transition-colors ${
               value === s.value
-                ? 'border-amber-400 bg-amber-950 dark:bg-[#1c1400] text-white'
+                ? 'border-amber-400 bg-amber-100 dark:bg-[#1c1400] text-amber-900 dark:text-white'
                 : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-600 dark:text-gray-400 hover:border-gray-400 dark:hover:border-gray-500 hover:bg-white dark:hover:bg-[#16161a]'
             }`}
           >

@@ -93,7 +93,9 @@ export default async function ResultsPage({
         </div>
       </nav>
 
-      <ResultModeBanner mode={mode} />
+      <div className="px-4">
+        <ResultModeBanner mode={mode} />
+      </div>
 
       {/* Hero score strip — full width, outside card padding */}
       <PulseScore score={scores.pulse_score} reasoning={scores.pulse_score_reasoning} />
