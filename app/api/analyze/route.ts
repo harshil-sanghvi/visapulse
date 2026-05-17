@@ -22,17 +22,29 @@ export async function POST(req: NextRequest) {
   if (input.status === 'h1b_pending' && input.service_center) {
     try {
       uscis = await getUscisProcessingTime('I-129', input.service_center)
-    } catch {}
+    } catch (e) {
+      console.error('USCIS fetch failed:', e)
+    }
   }
 
   // 3. Community benchmarks
   let community: CommunityBenchmark = { n: 0 }
   try {
     community = await getCommunityBenchmark(input)
-  } catch {}
+  } catch (e) {
+    console.error('Community benchmark failed:', e)
+  }
 
   // 4. AI synthesis with fallback
-  const { scores: aiScores, provider } = await synthesizeWithAI(input, uscis, community)
+  let aiScores: Partial<Scores> | null = null
+  let provider: 'gemini' | 'groq' | null = null
+  try {
+    const result = await synthesizeWithAI(input, uscis, community)
+    aiScores = result.scores
+    provider = result.provider
+  } catch (e) {
+    console.error('AI synthesis threw unexpectedly:', e)
+  }
 
   // 5. Determine result mode
   let mode: ResultMode = 'FULL'
@@ -84,7 +96,7 @@ export async function POST(req: NextRequest) {
   }
 
   // 7. Store anonymized submission (no PII — receipt_number excluded)
-  const { data: submission } = await supabaseAdmin
+  const { data: submission, error: insertError } = await supabaseAdmin
     .from('submissions')
     .insert({
       status: input.status,
@@ -99,6 +111,7 @@ export async function POST(req: NextRequest) {
     .single()
 
   if (!submission) {
+    console.error('Supabase insert failed:', insertError)
     return NextResponse.json({ error: 'Failed to store result' }, { status: 500 })
   }
 
